@@ -1,4 +1,4 @@
-ttime = [
+ttime = ['Time',
 {'en': 'second', 'uk': 'секунда', 'nd': 'seconde'},
 {'en': 'minute', 'uk': 'хвилина', 'nd': 'minuut'},
 {'en': 'hour', 'uk': 'година', 'nd': 'uur'},

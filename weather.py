@@ -1,4 +1,4 @@
-weather = [
+weather = ['Weather',
 {'en': 'sun', 'uk': 'сонце', 'nd': 'zon'},
 {'en': 'sunshine', 'uk': 'сонячне сяйво', 'nd': 'zonneschijn'},
 {'en': 'rain', 'uk': 'дощ', 'nd': 'regen'},

@@ -1,4 +1,4 @@
-family = [
+family = ['Family',
 {'en': ('father', 'dad'), 'uk': ('отець', 'батько'), 'nd': 'vader'},
 {'en': ('mother', 'mum'), 'uk': ('матір', 'мати'), 'nd': 'moeder'},
 {'en': 'son', 'uk': 'син', 'nd': 'zoon'},

@@ -1,0 +1,22 @@
+{
+   "866012534": {
+      "word_index": [
+         21
+      ],
+      "part": "Adjective",
+      "task_numb": 1,
+      "folder_name": "adjective",
+      "markup": null,
+      "text_m": null
+   },
+   "6004912691": {
+      "word_index": [
+         23
+      ],
+      "part": "Colours",
+      "task_numb": 1,
+      "folder_name": "colours",
+      "markup": null,
+      "text_m": null
+   }
+}

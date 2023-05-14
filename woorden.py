@@ -1,4 +1,4 @@
-adjective = [
+adjective = ['Adjective',
 	{'uk': 'великий', 'en': 'big', 'nd': 'groot'},
 	{'uk': 'маленький', 'en': ('small', 'little'), 'nd': 'klein'},
 	{'uk': 'швидкий', 'en': 'fast', 'nd': 'snel'},

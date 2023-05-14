@@ -1,4 +1,4 @@
-colours = [
+colours = ['Colours',
 {'en': 'What colour is it?', 'uk': 'Який це колір?', 'nd': 'Welke kleur is het?'},
 {'en': 'white', 'uk': 'білий', 'nd': 'wit'}, 
 {'en': 'yellow', 'uk': 'жовтий', 'nd': 'geel'}, 
