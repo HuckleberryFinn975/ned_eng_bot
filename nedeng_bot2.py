@@ -40,6 +40,7 @@ try:
             users_data[str(message.chat.id)]['word_index'], users_data[str(message.chat.id)]['part'] = [], None
             users_data[str(message.chat.id)]['task_numb'], users_data[str(message.chat.id)]['folder_name'] = 0, None
             users_data[str(message.chat.id)]['markup'], users_data[str(message.chat.id)]['text_m'] = None, None
+            users_data[str(message.chat.id)]['random'] = False
         
         users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
         item1, item2, item3 = types.KeyboardButton('Популярні прикметники'), types.KeyboardButton('Родина'), types.KeyboardButton('Погода')
@@ -64,6 +65,19 @@ try:
                 if word_num not in users_data[str(message.chat.id)]['word_index']:
                     users_data[str(message.chat.id)]['word_index'].append(word_num)
                     break
+        def loopRO(party):
+            global users_data
+            while True:
+                nonlocal word_num
+                if len(users_data[str(message.chat.id)]['word_index']) >= len(party) - 1:
+                    users_data[str(message.chat.id)]['word_index'], users_data[str(message.chat.id)]['task_numb'] = [], 0
+                    bot.send_message(message.chat.id, f"<i><b>Повний круг пройдено</b></i>", parse_mode='HTML')
+                word_num = users_data[str(message.chat.id)]['task_numb']
+                if word_num in users_data[str(message.chat.id)]['word_index']:
+                    continue
+                if word_num not in users_data[str(message.chat.id)]['word_index']:
+                    users_data[str(message.chat.id)]['word_index'].append(word_num)
+                    break
         if message.chat.type == 'private':
             if message.text == 'Популярні прикметники':
                 users_data[str(message.chat.id)]['text_m'] = 'Обери мову'
@@ -73,7 +87,31 @@ try:
                 item1, item2, item3 = types.KeyboardButton('🇺🇦 Українська'), types.KeyboardButton('🇬🇧 English'), types.KeyboardButton('🇳🇱 Dutch')
                 item4 = types.KeyboardButton('🔙 Назад')
                 item5 = types.KeyboardButton('🗑️')
-                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4, item5) 
+                if users_data[str(message.chat.id)]['random']:
+                    item6 = types.KeyboardButton('Random OFF')
+                else:
+                    item6 = types.KeyboardButton('Random ON')
+                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4, item5, item6) 
+                bot.send_message(message.chat.id, users_data[str(message.chat.id)]['text_m'], reply_markup = users_data[str(message.chat.id)]['markup'])
+            elif message.text == 'Random OFF':
+                bot.delete_message(message.chat.id, message.message_id)
+                users_data[str(message.chat.id)]['random'] = False
+                users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
+                item1, item2, item3 = types.KeyboardButton('🇺🇦 Українська'), types.KeyboardButton('🇬🇧 English'), types.KeyboardButton('🇳🇱 Dutch')
+                item4 = types.KeyboardButton('🔙 Назад')
+                item5 = types.KeyboardButton('🗑️')
+                item6 = types.KeyboardButton('Random ON')
+                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4, item5, item6)
+                bot.send_message(message.chat.id, users_data[str(message.chat.id)]['text_m'], reply_markup = users_data[str(message.chat.id)]['markup'])
+            elif message.text == 'Random ON':
+                bot.delete_message(message.chat.id, message.message_id)
+                users_data[str(message.chat.id)]['random'] = True
+                users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
+                item1, item2, item3 = types.KeyboardButton('🇺🇦 Українська'), types.KeyboardButton('🇬🇧 English'), types.KeyboardButton('🇳🇱 Dutch')
+                item4 = types.KeyboardButton('🔙 Назад')
+                item5 = types.KeyboardButton('🗑️')
+                item6 = types.KeyboardButton('Random OFF')
+                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4, item5, item6)
                 bot.send_message(message.chat.id, users_data[str(message.chat.id)]['text_m'], reply_markup = users_data[str(message.chat.id)]['markup'])
             elif message.text == '🗑️':
                 # try:
@@ -94,7 +132,12 @@ try:
                 users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
                 item1, item2, item3 = types.KeyboardButton('🇺🇦 Українська'), types.KeyboardButton('🇬🇧 English'), types.KeyboardButton('🇳🇱 Dutch')
                 item4 = types.KeyboardButton('🔙 Назад')
-                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4) 
+                item5 = types.KeyboardButton('🗑️')
+                if users_data[str(message.chat.id)]['random']:
+                    item6 = types.KeyboardButton('Random OFF')
+                else:
+                    item6 = types.KeyboardButton('Random ON')
+                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4, item5, item6)
                 bot.send_message(message.chat.id, 'Обери мову', reply_markup = users_data[str(message.chat.id)]['markup'])
             elif message.text == 'Погода':
                 if users_data[str(message.chat.id)]['part'] != weather:
@@ -102,7 +145,12 @@ try:
                 users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
                 item1, item2, item3 = types.KeyboardButton('🇺🇦 Українська'), types.KeyboardButton('🇬🇧 English'), types.KeyboardButton('🇳🇱 Dutch')
                 item4 = types.KeyboardButton('🔙 Назад')
-                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4) 
+                item5 = types.KeyboardButton('🗑️')
+                if users_data[str(message.chat.id)]['random']:
+                    item6 = types.KeyboardButton('Random OFF')
+                else:
+                    item6 = types.KeyboardButton('Random ON')
+                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4, item5, item6)
                 bot.send_message(message.chat.id, 'Обери мову', reply_markup = users_data[str(message.chat.id)]['markup'])
             elif message.text == 'Кольори':
                 if users_data[str(message.chat.id)]['part'] != colours:
@@ -110,7 +158,12 @@ try:
                 users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
                 item1, item2, item3 = types.KeyboardButton('🇺🇦 Українська'), types.KeyboardButton('🇬🇧 English'), types.KeyboardButton('🇳🇱 Dutch')
                 item4 = types.KeyboardButton('🔙 Назад')
-                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4) 
+                item5 = types.KeyboardButton('🗑️')
+                if users_data[str(message.chat.id)]['random']:
+                    item6 = types.KeyboardButton('Random OFF')
+                else:
+                    item6 = types.KeyboardButton('Random ON')
+                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4, item5, item6)
                 bot.send_message(message.chat.id, 'Обери мову', reply_markup = users_data[str(message.chat.id)]['markup'])
             elif message.text == 'Час':
                 if users_data[str(message.chat.id)]['part'] != ttime:
@@ -118,7 +171,12 @@ try:
                 users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
                 item1, item2, item3 = types.KeyboardButton('🇺🇦 Українська'), types.KeyboardButton('🇬🇧 English'), types.KeyboardButton('🇳🇱 Dutch')
                 item4 = types.KeyboardButton('🔙 Назад')
-                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4) 
+                item5 = types.KeyboardButton('🗑️')
+                if users_data[str(message.chat.id)]['random']:
+                    item6 = types.KeyboardButton('Random OFF')
+                else:
+                    item6 = types.KeyboardButton('Random ON')
+                users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4, item5, item6)
                 bot.send_message(message.chat.id, 'Обери мову', reply_markup = users_data[str(message.chat.id)]['markup'])
             elif message.text == '🇺🇦 Українська':
                 try:
@@ -126,11 +184,15 @@ try:
                     item1, item2, item3 = types.KeyboardButton('Правильна відповідь'), types.KeyboardButton('Наступне'), types.KeyboardButton('Змінити мову')
                     item4 = types.KeyboardButton('🔙 Назад')
                     users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4)
-                    loop(users_data[str(message.chat.id)]['part'])
-                    uk = users_data[str(message.chat.id)]['part'][word_num]['uk']
                     users_data[str(message.chat.id)]['task_numb'] +=1
+                    if users_data[str(message.chat.id)]['random']:
+                        loop(users_data[str(message.chat.id)]['part'])
+                    else:
+                        loopRO(users_data[str(message.chat.id)]['part'])
+                    uk = users_data[str(message.chat.id)]['part'][word_num]['uk']
                     bot.send_message(message.chat.id, f"<b>{users_data[str(message.chat.id)]['task_numb']} із {len(users_data[str(message.chat.id)]['part']) - 1}.</b> Переклади:\t\t<i><b>{kortezh(uk)}</b></i>", parse_mode='HTML', reply_markup = users_data[str(message.chat.id)]['markup'])
-                except TypeError:
+                except Exception as ex:
+                    print(ex)
                     users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
                     item1, item2, item3 = types.KeyboardButton('Популярні прикметники'), types.KeyboardButton('Родина'), types.KeyboardButton('Погода')
                     item4, item5 = types.KeyboardButton('Кольори'), types.KeyboardButton('Час')
@@ -192,9 +254,12 @@ try:
                     item3 = types.KeyboardButton('Змінити мову')
                     item4 = types.KeyboardButton('🔙 Назад')
                     users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4)  
-                    loop(users_data[str(message.chat.id)]['part'])
-                    uk = users_data[str(message.chat.id)]['part'][word_num]['uk']
                     users_data[str(message.chat.id)]['task_numb'] +=1
+                    if users_data[str(message.chat.id)]['random']:
+                        loop(users_data[str(message.chat.id)]['part'])
+                    else:
+                        loopRO(users_data[str(message.chat.id)]['part'])
+                    uk = users_data[str(message.chat.id)]['part'][word_num]['uk']
                     bot.delete_message(message.chat.id, message.message_id)
                     bot.send_message(message.chat.id, f"<b>{users_data[str(message.chat.id)]['task_numb']} із {len(users_data[str(message.chat.id)]['part']) - 1}.</b> Переклади:\t\t<i><b>{kortezh(uk)}</b></i>", parse_mode='HTML', reply_markup = users_data[str(message.chat.id)]['markup'])
                 except TypeError:
@@ -221,9 +286,12 @@ try:
                     item4 = types.KeyboardButton('🇬🇧 🔊')
                     item5 = types.KeyboardButton('🔙 Back')
                     users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item4, item5) 
-                    loop(users_data[str(message.chat.id)]['part'])
-                    en = users_data[str(message.chat.id)]['part'][word_num]['en']
                     users_data[str(message.chat.id)]['task_numb'] +=1
+                    if users_data[str(message.chat.id)]['random']:
+                        loop(users_data[str(message.chat.id)]['part'])
+                    else:
+                        loopRO(users_data[str(message.chat.id)]['part'])
+                    en = users_data[str(message.chat.id)]['part'][word_num]['en']
                     bot.send_message(message.chat.id, f"<b>{users_data[str(message.chat.id)]['task_numb']} of {len(users_data[str(message.chat.id)]['part']) - 1}.</b> Translate:\t\t<i><b>{kortezh(en)}</b></i>", parse_mode='HTML', reply_markup = users_data[str(message.chat.id)]['markup'])
                 except TypeError:
                     users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
@@ -256,9 +324,12 @@ try:
                     item5 = types.KeyboardButton('🇬🇧 🔊')
                     item4 = types.KeyboardButton('🔙 Back')
                     users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item5, item4)  
-                    loop(users_data[str(message.chat.id)]['part'])
-                    en = users_data[str(message.chat.id)]['part'][word_num]['en']
                     users_data[str(message.chat.id)]['task_numb'] +=1
+                    if users_data[str(message.chat.id)]['random']:
+                        loop(users_data[str(message.chat.id)]['part'])
+                    else:
+                        loopRO(users_data[str(message.chat.id)]['part'])
+                    en = users_data[str(message.chat.id)]['part'][word_num]['en']
                     bot.delete_message(message.chat.id, message.message_id)
                     bot.send_message(message.chat.id, f"<b>{users_data[str(message.chat.id)]['task_numb']} of {len(users_data[str(message.chat.id)]['part']) - 1}.</b> Translate:\t\t<i><b>{kortezh(en)}</b></i>", parse_mode='HTML', reply_markup = users_data[str(message.chat.id)]['markup'])
                 except Exception as ex:
@@ -286,9 +357,12 @@ try:
                     item5 = types.KeyboardButton('🇳🇱 🔊')
                     item4 = types.KeyboardButton('🔙 Terug')
                     users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item5,item4) 
-                    loop(users_data[str(message.chat.id)]['part'])
-                    nd = users_data[str(message.chat.id)]['part'][word_num]['nd']
                     users_data[str(message.chat.id)]['task_numb'] +=1
+                    if users_data[str(message.chat.id)]['random']:
+                        loop(users_data[str(message.chat.id)]['part'])
+                    else:
+                        loopRO(users_data[str(message.chat.id)]['part'])
+                    nd = users_data[str(message.chat.id)]['part'][word_num]['nd']
                     bot.send_message(message.chat.id, f"<b>{users_data[str(message.chat.id)]['task_numb']} van {len(users_data[str(message.chat.id)]['part']) - 1}.</b> Vertaal:\t\t<i><b>{kortezh(nd)}</b></i>", parse_mode='HTML', reply_markup = users_data[str(message.chat.id)]['markup'])
                 except TypeError:
                     users_data[str(message.chat.id)]['markup'] = types.ReplyKeyboardMarkup(resize_keyboard = True)
@@ -320,9 +394,12 @@ try:
                     item5 = types.KeyboardButton('🇳🇱 🔊')
                     item4 = types.KeyboardButton('🔙 Terug')
                     users_data[str(message.chat.id)]['markup'].add(item1, item2, item3, item5,item4) 
-                    loop(users_data[str(message.chat.id)]['part'])
-                    nd = users_data[str(message.chat.id)]['part'][word_num]['nd']
                     users_data[str(message.chat.id)]['task_numb'] +=1
+                    if users_data[str(message.chat.id)]['random']:
+                        loop(users_data[str(message.chat.id)]['part'])
+                    else:
+                        loopRO(users_data[str(message.chat.id)]['part'])
+                    nd = users_data[str(message.chat.id)]['part'][word_num]['nd']
                     bot.delete_message(message.chat.id, message.message_id)
                     bot.send_message(message.chat.id, f"<b>{users_data[str(message.chat.id)]['task_numb']} van {len(users_data[str(message.chat.id)]['part']) - 1}.</b> Vertaal:\t\t<i><b>{kortezh(nd)}</b></i>", parse_mode='HTML', reply_markup = users_data[str(message.chat.id)]['markup'])
                 except TypeError:
